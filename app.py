@@ -17,6 +17,7 @@ st.set_page_config(
 # -----------------------------------------------------------------------------
 # 2. SISTEMA DE AUTENTICAÇÃO E LOGIN
 # -----------------------------------------------------------------------------
+
 names = ['Caio Sertori']
 usernames = ['sertcaio']
 # Hash para a senha padrão: "Gabigol2019!"
@@ -38,7 +39,17 @@ authenticator = stauth.Authenticate(
     cookie_expiry_days=30
 )
 
-name, authentication_status, username = authenticator.login('main', fields={'Form name': '🔒 Login do Painel de Investimentos'})
+# Nas versões mais recentes do streamlit-authenticator, o método login() é chamado sem argumentos posicionais antigos:
+try:
+    # Compatibilidade com v0.3.x
+    authenticator.login()
+except TypeError:
+    # Compatibilidade com versões anteriores
+    authenticator.login('main')
+
+authentication_status = st.session_state.get("authentication_status")
+name = st.session_state.get("name")
+username = st.session_state.get("username")
 
 if authentication_status == False:
     st.error('❌ Usuário ou senha incorretos.')
@@ -47,7 +58,6 @@ elif authentication_status == None:
     st.warning('👈 Por favor, digite suas credenciais para acessar o painel.')
     st.info('💡 **Credenciais de teste:** Usuário: `caio` | Senha: `invest123`')
     st.stop()
-
 # -----------------------------------------------------------------------------
 # 3. INTERFACE PRINCIPAL (AUTENTICADO)
 # -----------------------------------------------------------------------------
