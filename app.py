@@ -17,17 +17,15 @@ st.set_page_config(
 # -----------------------------------------------------------------------------
 # 2. SISTEMA DE AUTENTICAÇÃO E LOGIN
 # -----------------------------------------------------------------------------
-
 names = ['Caio Sertori']
 usernames = ['sertcaio']
-# Hash para a senha padrão: "Gabigol2019!"
-hashed_passwords = ['$2b$12$eImiTXuWVxfM37uY4JANjO5E/CkWp/E0xTjG.2H1V11T3r8H.O8E2']
 
+# Dicionário de credenciais em texto simples para garantir compatibilidade
 credentials = {
     'usernames': {
-        usernames[0]: {
-            'name': names[0],
-            'password': hashed_passwords[0]
+        'sertcaio': {
+            'name': 'Caio Sertori',
+            'password': 'Gabigol2019!'
         }
     }
 }
@@ -39,12 +37,10 @@ authenticator = stauth.Authenticate(
     cookie_expiry_days=30
 )
 
-# Nas versões mais recentes do streamlit-authenticator, o método login() é chamado sem argumentos posicionais antigos:
+# Renderiza a tela de login
 try:
-    # Compatibilidade com v0.3.x
     authenticator.login()
 except TypeError:
-    # Compatibilidade com versões anteriores
     authenticator.login('main')
 
 authentication_status = st.session_state.get("authentication_status")
@@ -56,7 +52,6 @@ if authentication_status == False:
     st.stop()
 elif authentication_status == None:
     st.warning('👈 Por favor, digite suas credenciais para acessar o painel.')
-    st.info('💡 **Credenciais de teste:** Usuário: `caio` | Senha: `invest123`')
     st.stop()
 # -----------------------------------------------------------------------------
 # 3. INTERFACE PRINCIPAL (AUTENTICADO)
